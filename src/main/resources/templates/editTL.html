@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Team Leader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-container {
+            margin: 20px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            border-radius: 4px;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .delete-btn {
+            background-color: #dc3545; /* Red background */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Edit Team Leader</h1>
+    
+    <!-- Form for Editing Team Leader Details -->
+    <form th:action="@{/tl/update/{id}(id=${tl.id})}" method="post">
+        <input type="hidden" name="id" th:value="${tl.id}">
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" th:value="${tl.name}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="department">Department:</label>
+            <input type="text" id="department" name="department" th:value="${tl.department}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" th:value="${tl.email}" required>
+        </div>
+        
+        <button type="submit" class="submit-btn">Update Team Leader</button>
+    </form>
+
+    <!-- Delete Team Leader Form -->
+    
+
+    <!-- Link Back to Team Leader List -->
+    <a href="/admin/tl" class="submit-btn" style="text-align: center; display: block; margin-top: 20px;">Back to Team Leader List</a>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this Team Leader?");
+    }
+</script>
+
+</body>
+</html>
