@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Leader Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a2d1e7 0%, #f4f4f9 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard-container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .task-list {
+            margin-top: 20px;
+        }
+        .task {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .task:last-child {
+            border-bottom: none;
+        }
+        .task input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .add-task {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .add-task input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .add-task button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-task button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Team Leader Dashboard</h1>
+        <div class="task-list">
+            <h2>Tasks Assigned to Your Team</h2>
+            <!-- Dynamic Task List using Thymeleaf -->
+            <div class="task" th:each="task : ${tasks}">
+                <input type="checkbox" th:id="${task.id}" th:checked="${task.completed}">
+                <label th:for="${task.id}" th:text="${task.description}"></label>
+            </div>
+        </div>
+        
+        <form class="add-task" action="/tl/addTask" method="post">
+            <input type="text" name="taskDescription" placeholder="Add a new task..." required />
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+</body>
+</html>

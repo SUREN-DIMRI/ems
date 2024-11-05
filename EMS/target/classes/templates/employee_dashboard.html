@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <style>
+        /* CSS Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            color: #333;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .content {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .attendance, .tasks {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .attendance:hover, .tasks:hover {
+            transform: scale(1.02);
+        }
+        h2 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+        li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Employee Dashboard</h1>
+    </div>
+
+    <div class="content">
+        <div class="attendance">
+            <h2>Attendance</h2>
+            <form action="#" th:action="@{/attendance/add}" method="post">
+                <input type="checkbox" name="present" id="attendanceCheck" />
+                <label for="attendanceCheck">Mark Present</label>
+                <button type="submit">Submit Attendance</button>
+            </form>
+        </div>
+
+        <div class="tasks">
+            <h2>Your Tasks</h2>
+            <ul>
+                <li th:each="task : ${tasks}">
+                    <input type="checkbox" name="completed" th:id="'task_' + ${task.id}" 
+                           th:value="${task.id}" th:checked="${task.completed}" />
+                    <label th:for="'task_' + ${task.id}" th:text="${task.description}"></label>
+                    <form action="#" th:action="@{/task/complete}" method="post" style="display:inline;">
+                        <input type="hidden" name="taskId" th:value="${task.id}" />
+                        <button type="submit">Complete</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="./style.css"> <!-- Optional: Add your main CSS file -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Use flexbox for layout */
+            transition: margin-left 0.3s; /* Transition for content margin */
+        }
+        .sidebar {
+            width: 250px; /* Sidebar width */
+            background: #007bff; /* Sidebar background color */
+            color: #fff; /* Text color */
+            height: 100vh; /* Full height */
+            padding: 20px; /* Add some padding around the sidebar */
+            padding-top: 60px; /* Add padding to the top to create space for the button */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed; /* Fixed position to the left */
+            left: -250px; /* Initially hidden */
+            transition: left 0.3s; /* Transition for smooth opening */
+        }
+        .sidebar.active {
+            left: 0; /* Show sidebar when active */
+        }
+        .sidebar h2 {
+            text-align: center;
+            padding-bottom: 20px; /* Add bottom padding to the heading */
+        }
+        .sidebar a {
+            display: block;
+            color: #fff;
+            padding: 10px 15px; /* Padding for the links */
+            text-decoration: none;
+            margin: 10px 0; /* Margin between links */
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background: #0056b3; /* Darker blue on hover */
+        }
+        .content {
+            flex: 1; /* Take remaining width */
+            padding: 20px; /* Padding for the main content */
+            transition: margin-left 0.3s; /* Transition for content margin */
+            margin-top: 0; /* Set margin-top to 0 */
+        }
+        .header {
+            display: flex; /* Use flexbox for the header */
+            justify-content: space-between; /* Space between left and right content */
+            align-items: center; /* Center vertically */
+            background: rgba(255, 255, 255, 0.2); /* White background with transparency */
+            backdrop-filter: blur(10px); /* Apply a blur effect for the glass effect */
+            color: #333; /* Change text color to dark for better contrast */
+            padding: 10px 20px; /* Adjust padding for the header */
+            position: fixed; /* Make header fixed */
+            top: 0; /* Position at the top */
+            width: 100%; /* Full width */
+            z-index: 1; /* Ensure the header is above other content */
+            border-radius: 10px; /* Optional: add border-radius for rounded corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional: add shadow for depth */
+        }
+        .header h1 {
+            flex: 1; /* Allow the title to take available space */
+            text-align: center; /* Center the title */
+            margin: 0; /* Remove default margin */
+        }
+        .welcome {
+            margin-left: auto; /* Push this to the right */
+            font-size: 16px; /* Adjust font size for visibility */
+            color: #333; /* Change text color to dark */
+        }
+        .menu-button {
+            background: #007bff; /* Match button color to header */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0; /* Remove margin */
+            z-index: 1; /* Keep button above sidebar */
+        }
+        .main-content {
+            padding-top: 80px; /* Add padding-top to avoid overlap with header */
+        }
+
+        /* Style for clickable icons */
+        .icon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .icon-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .icon {
+            width: 180px;
+            height: 180px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .icon img {
+            width: 90px;
+            height: 90px;
+        }
+
+        .icon-label {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="menu-button" onclick="toggleSidebar()">Menu</button>
+        <h1>Welcome to the Dashboard</h1>
+        <div class="welcome">You are successfully logged in.</div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <a href="/admin/profile">Profile</a>
+        <a href="/admin/settings">Settings</a>
+        <a href="/admin/reports">Reports</a>
+        <a href="/admin/help">Help</a>
+        <a href="/">Logout</a>
+    </div>
+    
+    <div class="content main-content" id="content">
+        <div class="icon-container">
+            <div class="icon-row">
+                <div class="icon" onclick="window.location.href='/admin/employee'">
+                    <img src="https://www.flaticon.com/free-icon/employee_5673264" alt="Employee Icon"> <!-- Use a valid image source -->
+                    <div class="icon-label">Employee</div>
+                </div>
+                <div class="icon" onclick="window.location.href='/admin/tl'">
+                    <img src="tl.jpg" alt="TL Icon"> <!-- Ensure this image source is correct -->
+                    <div class="icon-label">TL</div>
+                </div>
+            </div>
+            <div class="icon" onclick="window.location.href='/admin/hr'">
+                <img src="icons/hr.jpg" alt="HR Icon"> <!-- Ensure this image source is correct -->
+                <div class="icon-label">HR</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            sidebar.classList.toggle('active'); // Toggle the active class
+            
+            // Adjust the content margin based on sidebar state
+            if (sidebar.classList.contains('active')) {
+                content.style.marginLeft = '250px'; // Shift content when sidebar is active
+            } else {
+                content.style.marginLeft = '0'; // Reset content margin when sidebar is inactive
+            }
+        }
+    </script>
+</body>
+</html>
