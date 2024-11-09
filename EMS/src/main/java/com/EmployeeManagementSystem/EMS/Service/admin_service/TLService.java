@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.EmployeeManagementSystem.EMS.Entity.admin_entity.Employee;
 import com.EmployeeManagementSystem.EMS.Entity.admin_entity.TL;
 import com.EmployeeManagementSystem.EMS.Repository.admin_repository.TLRepository;
 
@@ -39,4 +42,17 @@ public class TLService {
     public void updateTL(TL tl) {
         tlRepository.save(tl); // This will handle both insert and update based on the presence of ID
     }
+
+    public Page<TL> getPaginatedTL(Pageable pageable) {
+        return tlRepository.findAll(pageable); // This returns a paginated list of TLs
+    }
+
+    public Page<TL> searchTL(String query, Pageable pageable) {
+        if (query == null || query.trim().isEmpty()) {
+            return getPaginatedTL(pageable); // If no search query, return all TLs with pagination
+        }
+        return tlRepository.findByNameContainingOrDepartmentContainingOrEmailContaining(query, query, query, pageable);
+    }
+
+   
 }

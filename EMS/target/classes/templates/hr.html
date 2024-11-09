@@ -5,89 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HR Management</title>
     <style>
-        body {
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-image: url(icons/background-image.jpeg);
-            background-size: cover;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #333;
         }
 
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 30px;
         }
 
         h1, h2 {
-            color: #333;
+            color: #444;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         form {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
         }
 
-        input {
+        form input[type="text"],
+        form input[type="email"] {
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: calc(33% - 20px);
+            font-size: 1rem;
         }
 
-        button {
-            padding: 10px;
+        form button {
             background-color: #007bff;
             color: white;
+            padding: 10px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        button:hover {
+        form button:hover {
             background-color: #0056b3;
         }
 
+        /* Search container */
+        .search-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 0.9rem;
+        }
+
+        .search-container button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-container button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Table styling */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        table th,
+        table td {
+            padding: 12px 15px;
+            text-align: center;
         }
 
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .edit-btn, .delete-btn {
-            margin-right: 10px;
-            padding: 5px 10px;
+        table th {
+            background-color: #007bff;
             color: white;
-            text-decoration: none;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        table td {
+            color: #555;
+        }
+
+        /* Action buttons */
+        .edit-btn,
+        .delete-btn {
+            padding: 8px 12px;
+            margin: 2px;
+            color: white;
+            border: none;
             border-radius: 5px;
-            font-size: 14px;
+            cursor: pointer;
+            font-size: 0.85rem;
         }
 
         .edit-btn {
-            background-color: #28a745; /* Green background */
+            background-color: #17a2b8;
+        }
+
+        .edit-btn:hover {
+            background-color: #138496;
         }
 
         .delete-btn {
-            background-color: #dc3545; /* Red background */
+            background-color: #dc3545;
         }
 
-        .edit-btn:hover, .delete-btn:hover {
-            opacity: 0.8;
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            padding: 8px 12px;
+            margin: 0 4px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .pagination a.current-page {
+            background-color: #007bff;
+            color: white;
+            pointer-events: none;
+        }
+
+        .pagination a:hover {
+            background-color: #0056b3;
+            color: white;
         }
     </style>
 </head>
@@ -97,12 +182,20 @@
 
         <!-- Form to add new HR -->
         <h2>Add New HR</h2>
-        <form action="/addHR" method="post">
+        <form action="/hr/add" method="post">
             <input type="text" name="name" placeholder="Name" required>
             <input type="text" name="department" placeholder="Department" required>
             <input type="email" name="email" placeholder="Email" required>
             <button type="submit">Add HR</button>
         </form>
+
+        <!-- Search form -->
+        <div class="search-container">
+            <form action="/admin/hr/search" method="get">
+                <input type="text" name="query" placeholder="Search by name or department" required>
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
         <!-- Table to display HR list -->
         <h2>HR List</h2>
@@ -113,25 +206,34 @@
                     <th>Department</th>
                     <th>Email</th>
                     <th>Name</th>
-                    <th>Actions</th> <!-- New Actions column for Edit/Delete -->
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="hr : ${hrList}">
+                <tr th:each="hr : ${hrPage.content}">
                     <td th:text="${hr.id}">ID</td>
                     <td th:text="${hr.department}">Department</td>
                     <td th:text="${hr.email}">Email</td>
                     <td th:text="${hr.name}">Name</td>
                     <td>
-                        <a class="edit-btn" th:href="@{/hr/editHR/{id}(id=${hr.id})}">Edit</a>
+                        <a class="edit-btn" th:href="@{/hr/edit/{id}(id=${hr.id})}">Edit</a>
                         <form th:action="@{/hr/delete/{id}(id=${hr.id})}" method="post" style="display:inline;" onsubmit="return confirmDelete();">
-                            <input type="hidden" name="id" value="${hr.id}"/>
+                            <input type="hidden" name="id" th:value="${hr.id}"/>
                             <button type="submit" class="delete-btn">Delete</button>
                         </form>
                     </td>
                 </tr>
             </tbody>
         </table>
+
+        <!-- Pagination controls -->
+        <div class="pagination" th:if="${hrPage.totalPages > 1}">
+            <a th:each="i : ${#numbers.sequence(1, hrPage.totalPages)}"
+               th:href="@{/admin/hr(page=${i - 1}, size=${hrPage.size}, query=${param.query})}"
+               th:text="${i}"
+               th:classappend="${i == hrPage.number + 1} ? 'current-page' : ''">
+            </a>
+        </div>
     </div>
 
     <script>

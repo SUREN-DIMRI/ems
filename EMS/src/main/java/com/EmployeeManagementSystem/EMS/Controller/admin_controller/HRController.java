@@ -1,17 +1,17 @@
 package com.EmployeeManagementSystem.EMS.Controller.admin_controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.EmployeeManagementSystem.EMS.Entity.admin_entity.HR;
 import com.EmployeeManagementSystem.EMS.Service.admin_service.HRService;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 public class HRController {
@@ -19,53 +19,78 @@ public class HRController {
     @Autowired
     private HRService hrService;
 
+    // Get all HRs with pagination
     @GetMapping("/admin/hr")
-    public String getHR(Model model) {
-        List<HR> hrList = hrService.getALLHR();
-        model.addAttribute("hrList", hrList);
+    public String getHRs(
+        Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size
+    ) {
+        Page<HR> hrPage = hrService.getPaginatedHRs(page, size);
+        model.addAttribute("hrPage", hrPage);
+
+        // Create a list of page numbers for pagination controls
+        int totalPages = hrPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
         return "hr"; // This will map to hr.html
     }
 
-    @PostMapping("/addHR")
-    public String addHR(
-        @RequestParam("name") String name,
-        @RequestParam("department") String department,
-        @RequestParam("email") String email
-    ) {
-        HR newHR = new HR();
-        newHR.setName(name);
-        newHR.setDepartment(department);
-        newHR.setEmail(email);
-        hrService.addHR(newHR);
-        return "redirect:/admin/hr"; // Redirects back to the HR list page
+    // Add a new HR
+    @PostMapping("/hr/add")
+    public String addHR(@ModelAttribute HR hr) {
+        hrService.addHR(hr);
+        return "redirect:/admin/hr"; // Redirect to HR page to see the updated list
     }
 
-    @PostMapping("/update/{id}") // Ensure this path is matched correctly in the HTML
-    public String updateHR(
-        @PathVariable Long id,
-        @RequestParam("name") String name,
-        @RequestParam("department") String department,
-        @RequestParam("email") String email
-    ) {
-        HR updatedHR = new HR();
-        updatedHR.setId(id);
-        updatedHR.setName(name);
-        updatedHR.setDepartment(department);
-        updatedHR.setEmail(email);
-        hrService.updateHR(updatedHR);
-        return "redirect:/admin/hr"; // Redirects back to the HR list page
+    // Get the form to edit an HR by ID
+    @GetMapping("hr/edit/{id}")
+    public String editHRForm(@PathVariable Long id, Model model) {
+        HR hr = hrService.getHRById(id); // Fetch the HR using the service
+        model.addAttribute("hr", hr);
+        return "editHR"; // This will map to editHR.html
     }
 
-    @PostMapping("/hr/delete/{id}")
+    // Update HR details
+    @PostMapping("/updateHR/{id}")
+    public String updateHR(@PathVariable Long id, @ModelAttribute HR hr) {
+        hr.setId(id); // Set the ID to ensure the correct HR is updated
+        hrService.updateHR(hr); // Save the updated HR
+        return "redirect:/admin/hr"; // Redirect to HR page to see the updated list
+    }
+
+    // Delete an HR by ID
+    @PostMapping("/admin/hr/delete/{id}")
     public String deleteHR(@PathVariable Long id) {
-        hrService.deleteHR(id);
-        return "redirect:/admin/hr"; // Redirects back to the HR list page
+        hrService.deleteHR(id); // Call the service to delete the HR
+        return "redirect:/admin/hr"; // Redirect to the HR list page after deletion
     }
 
-    @GetMapping("/hr/editHR/{id}")
-    public String editHR(@PathVariable Long id, Model model) {
-        HR hr = hrService.getHRById(id);
-        model.addAttribute("hr", hr); // Pass the HR object to the view
-        return "editHR"; // Ensure this matches your HTML file name without the extension
+    // Search HRs with pagination
+    @GetMapping("/admin/hr/search")
+    public String searchHRs(
+        @RequestParam String query,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size,
+        Model model
+    ) {
+        Page<HR> hrPage = hrService.searchHRs(query, page, size);
+        model.addAttribute("hrPage", hrPage);
+
+        // Create a list of page numbers for pagination controls
+        int totalPages = hrPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "hr"; // Return to the HR page
     }
 }

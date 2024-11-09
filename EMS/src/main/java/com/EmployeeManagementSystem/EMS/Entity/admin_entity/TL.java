@@ -1,5 +1,6 @@
 package com.EmployeeManagementSystem.EMS.Entity.admin_entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ public class TL {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tlid")
     private Long id; // Unique identifier for each TL
 
     private String department; // Department of the TL

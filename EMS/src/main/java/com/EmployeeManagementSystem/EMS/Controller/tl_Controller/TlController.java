@@ -39,10 +39,14 @@ public class TlController {
     }
 
     @GetMapping("/tl_dashboard")
-    public String tlDashboard(Model model, Principal principal) { // Using Principal to get logged-in user
-        String employeeName = principal.getName(); // Get the logged-in username (assuming it's the employee's name)
-        List<task> tasks = tlManagementService.getTasksForTL(employeeName); // Fetch tasks for the TL
-        model.addAttribute("tasks", tasks);
-        return "tl_dashboard"; // Return the name of the HTML file
+    public String tlDashboard(Principal principal, Model model) {
+        if (principal != null) {
+            String username = principal.getName();
+            model.addAttribute("username", username);
+        } else {
+            System.out.println("Principal is null, user is not authenticated");
+        }
+    
+        return "tl_dashboard";
     }
 }
